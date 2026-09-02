@@ -13,7 +13,7 @@ export default function HomeScreen() {
         source={{uri: "https://picsum.photos/200"}}/>
         <Text style={styles.name}>Chidi</Text>
         <Text style={styles.bio}>Bio:{"\n"}
-           Lorem .</Text>
+          I hate bugs in my teeth</Text>
         <View style={styles.facts}>
         <Text style={styles.fact}>• I am a Software Developer</Text>
         <Text style={styles.fact}>• I love coding</Text>
