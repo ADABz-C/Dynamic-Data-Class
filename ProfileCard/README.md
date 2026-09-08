@@ -1,50 +1,92 @@
-# Welcome to your Expo app 👋
+# Homework 2: Profile Card
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project is a mobile **Profile Card** app built with React Native and
+Expo. It displays a profile image, a name, a short bio, and three fun facts in
+a centered card layout.
 
-## Get started
+The app demonstrates React Native's core `View`, `Text`, and `Image`
+components, `StyleSheet` styling, and Flexbox alignment.
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- Profile picture loaded with React Native's `Image` component
+- Full name and short bio/tagline
+- Three fun facts displayed inside a `View`
+- Vertically and horizontally centered card
+- Background colors, padding, margins, and rounded corners
 
-2. Start the app
+## Requirements
+
+Install the following before running the project:
+
+- [Node.js LTS](https://nodejs.org/)
+- npm (included with Node.js)
+- [Expo Go](https://expo.dev/go) on your Android or iPhone
+- For an iPhone, a Mac with Xcode is only needed if you want to use the iOS
+  Simulator instead of a physical phone
+
+## Installation
+
+Clone the repository, then open the Expo project directory:
+
+```bash
+git clone <your-repository-url>
+cd Dynamic-Data-Class/ProfileCard
+```
+
+Install the project dependencies:
+
+```bash
+npm install
+```
+
+## Run the app on your phone
+
+1. Connect your phone and computer to the same Wi-Fi network.
+2. Start the Expo development server:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+3. Open the **Expo Go** app on your phone.
+4. Scan the QR code shown in the terminal or in the browser window:
+   - **Android:** use the QR scanner in Expo Go.
+   - **iPhone:** use the phone's Camera app, then open the Expo Go link.
+5. The Profile Card app will load on your phone. Keep the development server
+   running while using the app.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+If the QR code does not connect, make sure both devices are on the same
+network. You can also press `m` in the Expo terminal to switch connection
+modes, or run:
 
 ```bash
-npm run reset-project
+npx expo start --tunnel
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Other ways to run the app
 
-## Learn more
+```bash
+# Android emulator
+npm run android
 
-To learn more about developing your project with Expo, look at the following resources:
+# iOS Simulator (macOS only)
+npm run ios
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Web browser
+npm run web
+```
 
-## Join the community
+## Project structure
 
-Join our community of developers creating universal apps.
+- `ProfileCard/app/(tabs)/index.tsx` - Profile Card screen
+- `ProfileCard/package.json` - Project scripts and dependencies
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Assignment checklist
+
+- [x] Expo project named Profile Card
+- [x] Profile picture, name, bio, and 2–3 fun facts
+- [x] `View`, `Text`, and `Image` components
+- [x] `StyleSheet` and Flexbox layout
+- [x] Background color, spacing, and rounded corners
+- [ ] Push the repository to GitHub and submit its link
