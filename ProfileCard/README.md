@@ -1,50 +1,124 @@
-# Welcome to your Expo app 👋
+# Profile Card App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project is a React Native mobile app built with Expo for Homework 2. It creates a simple profile card that introduces the core React Native components and styling system.
 
-## Get started
+The app displays:
 
-1. Install dependencies
+- A profile picture using `Image`
+- A full name using `Text`
+- A short bio or tagline using `Text`
+- 2–3 fun facts displayed in a styled list
+- A centered layout using Flexbox
+- A card with background color, spacing, and rounded corners
+
+## Project purpose
+
+This assignment helps students practice:
+
+- Using `View`, `Text`, and `Image` components
+- Applying `StyleSheet` for consistent styling
+- Using Flexbox to center and align content
+- Creating a clean mobile card layout
+- Publishing code to GitHub and submitting a project link
+
+## Requirements covered
+
+This app includes the required items from the assignment:
+
+- A profile photo
+- Full name
+- Short bio/tagline
+- Fun fact list
+- Centered card layout
+- Background color and spacing
+- Rounded corner styling
+
+## Prerequisites
+
+Before you run the app, make sure you have the following installed:
+
+- [Node.js LTS](https://nodejs.org/)
+- npm (included with Node.js)
+- [Expo Go](https://expo.dev/go) on your phone
+- A phone and computer connected to the same Wi-Fi network for testing
+
+## Install and run the app
+
+1. Open a terminal in the project folder.
+
+2. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Start the Expo development server:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. Open the Expo Go app on your phone.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+5. Scan the QR code shown in the terminal.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+6. Wait for the app to load. The profile card should appear on your phone.
 
-## Get a fresh project
+## Running on Android or iOS emulator
 
-When you're ready, run:
+You can also run the project in an emulator if you have one set up:
 
 ```bash
-npm run reset-project
+npm run android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+For iOS (requires macOS):
 
-## Learn more
+```bash
+npm run ios
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Common commands
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm start
+npx expo start
+npm run web
+npm run lint
+```
 
-## Join the community
+## Troubleshooting
 
-Join our community of developers creating universal apps.
+If the app does not load on your phone:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Make sure both devices are on the same Wi-Fi network
+- Restart the Expo server with:
+
+  ```bash
+  npx expo start --tunnel
+  ```
+
+- Ensure the phone has the latest version of Expo Go
+
+## App structure
+
+```text
+ProfileCard/
+├── app/
+│   ├── (tabs)
+│   │   └── index.tsx
+├── assets/
+├── package.json
+├── app.json
+├── tsconfig.json
+├── README.md
+└── .gitignore
+```
+
+## Notes
+
+This app is a basic profile card project and can be customized by editing the layout and styles in:
+
+- `app/(tabs)/index.tsx`
+
+Use this file to change the name, bio, fun facts, image, colors, and spacing.
