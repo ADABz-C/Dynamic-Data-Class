@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useState } from "react";
 import {
@@ -24,16 +23,16 @@ export default function HomeScreen() {
     setItem("");
   }
 
-  function deleteItem(index: number) {
+  function deleteItem(index: number){
     const newGroceries = groceries.filter(
       (item, itemIndex) => itemIndex !== index,
-    );
+    )
     setGroceries(newGroceries);
   }
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <Text style={styles.title}>Grocery List</Text>
+        <Text style={styles.title}>To-do List</Text>
         <TextInput
           style={styles.input}
           placeholder="Add Item..."
@@ -48,10 +47,10 @@ export default function HomeScreen() {
           data={groceries}
           keyExtractor={(item, index) => item.toString()}
           renderItem={({ item, index }) => (
-            <View style={styles.groceryItem}>
-              <Text style={styles.groceryText}>{item}</Text>
-              <Pressable onPress={() => deleteItem(index)}>
-                <Ionicons name="trash-outline" size={24} color="red" />
+            <View style={styles.todoItem}>
+              <Text style={styles.todoText}>{item}</Text>
+              <Pressable onPress={()=> deleteItem(index)}>
+                <Text style={styles.deleteText}>Delete</Text>
               </Pressable>
             </View>
           )}
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
-  groceryItem: {
+  todoItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -107,7 +106,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "100%",
   },
-  groceryText: {
+  todoText: {
     fontSize: 16,
     // color: "#333333",
   },
