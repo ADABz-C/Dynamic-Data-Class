@@ -1,3 +1,5 @@
+#Screenshot
+<img width="602" height="1044" alt="App Screenshot" src="https://github.com/user-attachments/assets/671418ea-7af9-4118-8114-ea845f4642b8" />
 # To-do App
 
 This project is a simple mobile to-do list app built with Expo and React Native. It lets you add tasks to a list, view them on screen, and remove items when they are finished or no longer needed.
