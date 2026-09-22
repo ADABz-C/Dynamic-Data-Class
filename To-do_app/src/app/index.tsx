@@ -13,21 +13,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [item, setItem] = useState("");
-  const [groceries, setGroceries] = useState<string[]>([]);
+  const [todo, setTodo] = useState<string[]>([]);
 
   function addItem() {
     if (item.trim() === "") {
       return;
     }
-    setGroceries([...groceries, item.trim()]);
+    setTodo([...todo, item.trim()]);
     setItem("");
   }
 
   function deleteItem(index: number){
-    const newGroceries = groceries.filter(
+    const newTodo = todo.filter(
       (item, itemIndex) => itemIndex !== index,
     )
-    setGroceries(newGroceries);
+    setTodo(newTodo);
   }
   return (
     <View style={styles.container}>
@@ -44,7 +44,7 @@ export default function HomeScreen() {
           <Text style={styles.buttonText}>Add Item</Text>
         </Pressable>
         <FlatList
-          data={groceries}
+          data={todo}
           keyExtractor={(item, index) => item.toString()}
           renderItem={({ item, index }) => (
             <View style={styles.todoItem}>
