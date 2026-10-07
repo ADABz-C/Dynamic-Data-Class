@@ -5,6 +5,7 @@ import TaskCard from "..//components/TaskCard";
 import FilterButton from "../components/FilterButton";
 import TaskModal from "../components/TaskModal";
 
+//TODO add login and sign up functionality with Firebase Authentication
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([
     {
@@ -46,6 +47,22 @@ export default function HomeScreen() {
 
   const [filter, setFilter] = useState("All");
   const [modalVisible, setModalVisible] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+
+  function openAddModal() {
+    setEditingTask(null);
+    setModalVisible(true);
+  }
+
+  function openEditModal(task) {
+    setEditingTask(task);
+    setModalVisible(true);
+  }
+
+  function closeModal() {
+    setModalVisible(false);
+    setEditingTask(null);
+  }
 
   function toggleTask(id) {
     setTasks(
@@ -59,6 +76,38 @@ export default function HomeScreen() {
         return task;
       }),
     );
+  }
+
+  function saveTask(taskData) {
+    if (editingTask) {
+      setTasks(
+        tasks.map((task) => {
+          if (task.id === editingTask.id) {
+            return {
+              ...task,
+              title: taskData.title,
+              category: taskData.category,
+              dueDate: taskData.dueDate,
+            };
+          }
+          return task;
+        }),
+      );
+    } else {
+      const newTask = {
+        id: Date.now().toString(),
+        title: taskData.title,
+        category: taskData.category,
+        dueDate: taskData.dueDate,
+        completed: false,
+      };
+      setTasks([...tasks, newTask]);
+    }
+    closeModal();
+  }
+
+  function deleteTask(id) {
+    setTasks(tasks.filter((task) => task.id !== id));
   }
 
   function addTask(taskData) {
@@ -126,7 +175,12 @@ export default function HomeScreen() {
         <FlatList
           data={filteredTasks}
           renderItem={({ item }) => (
-            <TaskCard task={item} onToggle={toggleTask} />
+            <TaskCard
+              task={item}
+              onToggle={toggleTask}
+              onEdit={openEditModal}
+              onDelete={deleteTask}
+            />
           )}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
@@ -134,9 +188,9 @@ export default function HomeScreen() {
         {modalVisible && (
           <TaskModal
             visible={modalVisible}
-            task={null}
-            onClose={() => setModalVisible(false)}
-            onSave={addTask}
+            task={editingTask}
+            onClose={() => closeModal()}
+            onSave={saveTask}
           />
         )}
       </View>

@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 
-export default function TaskCard({ task, onToggle }) {
+export default function TaskCard({ task, onToggle, onEdit, onDelete }) {
   function getCategoryStyle(category) {
     if (category === "School") {
       return styles.schoolCategory;
@@ -11,37 +12,70 @@ export default function TaskCard({ task, onToggle }) {
 
     return styles.workCategory;
   }
+
+  function renderRightActions() {
+    return (
+      <View style={styles.actions}>
+        <Pressable
+          style={[styles.actionButton, styles.editButton]}
+          onPress={() => onEdit(task)}
+        >
+          <Text style={styles.actionIcon}>✎</Text>
+          <Text style={styles.actionText}>Edit</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.actionButton, styles.deleteButton]}
+          onPress={() => onDelete(task.id)}
+        >
+          <Text style={styles.deleteIcon}>x</Text>
+          <Text style={styles.actionText}>Delete</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.taskCard}>
-      <Pressable
-        style={[styles.checkbox, task.completed && styles.checkboxCompleted]}
-        onPress={() => onToggle(task.id)}
-      >
-        {task.completed && <Text style={styles.checkmark}>✓</Text>}
-      </Pressable>
+    <Swipeable
+      renderRightActions={renderRightActions}
+      rightTreshold={40}
+      overshootRight={false}
+      containerStyle={styles.swipeContainer}
+    >
+      <View style={styles.taskCard}>
+        <Pressable
+          style={[styles.checkbox, task.completed && styles.checkboxCompleted]}
+          onPress={() => onToggle(task.id)}
+        >
+          {task.completed && <Text style={styles.checkmark}>✓</Text>}
+        </Pressable>
 
-      <View style={styles.taskContent}>
-        <View style={styles.taskMeta}>
-          <Text style={[styles.category, getCategoryStyle(task.category)]}>
-            {task.category.toUpperCase()}
+        <View style={styles.taskContent}>
+          <View style={styles.taskMeta}>
+            <Text style={[styles.category, getCategoryStyle(task.category)]}>
+              {task.category.toUpperCase()}
+            </Text>
+
+            <Text style={styles.dueDate}>Due: {task.dueDate}</Text>
+          </View>
+
+          <Text
+            style={[styles.taskTitle, task.completed && styles.completedText]}
+          >
+            {task.title}
           </Text>
-
-          <Text style={styles.dueDate}>Due: {task.dueDate}</Text>
         </View>
 
-        <Text
-          style={[styles.taskTitle, task.completed && styles.completedText]}
-        >
-          {task.title}
-        </Text>
+        <Text style={styles.chevron}>›</Text>
       </View>
-
-      <Text style={styles.chevron}>›</Text>
-    </View>
+    </Swipeable>
   );
 }
 
 const styles = StyleSheet.create({
+  swipeContainer: {
+    marginBottom: 10,
+    borderRadius: 14,
+  },
   taskCard: {
     minHeight: 72,
     backgroundColor: "#ffffff",
@@ -138,5 +172,37 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#bbbbbb",
     marginLeft: 8,
+  },
+  actions: {
+    width: 150,
+    flexDirection: "row",
+  },
+  actionButton: {
+    width: 75,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  editButton: {
+    backgroundColor: "#3478f6",
+  },
+  deleteButton: {
+    backgroundColor: "#ff4d4f",
+    borderTopRightRadius: 14,
+    borderBottomRightRadius: 14,
+  },
+  actionIcon: {
+    color: "white",
+    fontSize: 20,
+    marginBottom: 3,
+  },
+  deleteIcon: {
+    color: "#ffff",
+    fontSize: 24,
+    marginBottom: 3,
+  },
+  actionText: {
+    color: "white",
+    fontSize: 11,
+    fontWeight: "600",
   },
 });

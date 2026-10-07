@@ -1,6 +1,8 @@
 import { useState } from "react";
 import {
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -25,8 +27,16 @@ export default function TaskModal({ visible, task, onClose, onSave }) {
   const editing = task != null;
 
   return (
-    <Modal visible={visible} transparent={true} animationType="slide">
-      <View style={styles.overlay}>
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+
+      <KeyboardAvoidingView
+        style={styles.overlay}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <Pressable style={styles.background} onPress={onClose} />
         <View style={styles.modal}>
           <View style={styles.modalHeader}>
@@ -119,7 +129,7 @@ export default function TaskModal({ visible, task, onClose, onSave }) {
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </Pressable>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
