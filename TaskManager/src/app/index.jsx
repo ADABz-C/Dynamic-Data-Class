@@ -1,53 +1,58 @@
-import { useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TaskCard from "..//components/TaskCard";
 import FilterButton from "../components/FilterButton";
 import TaskModal from "../components/TaskModal";
-
-//TODO add login and sign up functionality with Firebase Authentication
+import { auth } from "../firebase/firebaseConfig";
+import {
+  createTask,
+  deleteTask,
+  subscribeToTasks,
+  updateTask,
+} from "../services/taskServices";
+//TODO Add Login and Signup functionality with Firebase Authentication
 export default function HomeScreen() {
-  const [tasks, setTasks] = useState([
-    {
-      id: "1",
-      title: "Finish N322 grading",
-      category: "School",
-      dueDate: "Today",
-      completed: false,
-    },
-    {
-      id: "2",
-      title: "Pick up groceries",
-      category: "Personal",
-      dueDate: "Today",
-      completed: false,
-    },
-    {
-      id: "3",
-      title: "Review lecture slides",
-      category: "School",
-      dueDate: "Today",
-      completed: true,
-    },
-    {
-      id: "4",
-      title: "Work on website",
-      category: "Work",
-      dueDate: "Friday",
-      completed: false,
-    },
-    {
-      id: "5",
-      title: "Work on book",
-      category: "Personal",
-      dueDate: "Friday",
-      completed: false,
-    },
-  ]);
-
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("All");
   const [modalVisible, setModalVisible] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setTasks([]);
+      return;
+    }
+
+    const unsubscribe = subscribeToTasks(
+      user.uid,
+      (firestoreTasks) => {
+        setTasks(firestoreTasks);
+      },
+      (error) => {
+        console.error("Error loading tasks: ", error);
+      },
+    );
+
+    return () => unsubscribe();
+  }, [user?.uid]);
 
   function openAddModal() {
     setEditingTask(null);
@@ -64,63 +69,53 @@ export default function HomeScreen() {
     setEditingTask(null);
   }
 
-  function toggleTask(id) {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === id) {
-          return {
-            ...task,
-            completed: !task.completed,
-          };
-        }
-        return task;
-      }),
-    );
-  }
+  async function toggleTask(id) {
+    const task = tasks.find((task) => task.id === id);
 
-  function saveTask(taskData) {
-    if (editingTask) {
-      setTasks(
-        tasks.map((task) => {
-          if (task.id === editingTask.id) {
-            return {
-              ...task,
-              title: taskData.title,
-              category: taskData.category,
-              dueDate: taskData.dueDate,
-            };
-          }
-          return task;
-        }),
-      );
-    } else {
-      const newTask = {
-        id: Date.now().toString(),
-        title: taskData.title,
-        category: taskData.category,
-        dueDate: taskData.dueDate,
-        completed: false,
-      };
-      setTasks([...tasks, newTask]);
+    if (!tasks) return;
+
+    try {
+      await updateTask(id, { completed: !task.completed });
+    } catch (error) {
+      console.error("Error updating task: ", error);
     }
-    closeModal();
   }
 
-  function deleteTask(id) {
-    setTasks(tasks.filter((task) => task.id !== id));
+  async function saveTask(taskData) {
+    if (!user) return;
+
+    try {
+      if (editingTask) {
+        await updateTask(editingTask.id, {
+          title: taskData.title,
+          category: taskData.category,
+          dueDate: taskData.dueDate,
+        });
+      } else {
+        await createTask(taskData, user.uid);
+      }
+      closeModal();
+    } catch (error) {
+      console.error("Error saving task", error);
+    }
   }
 
-  function addTask(taskData) {
-    const newTask = {
-      id: Date.now().toString(),
-      title: taskData.title,
-      category: taskData.category,
-      dueDate: taskData.dueDate,
-      completed: false,
-    };
+  async function removeTask(id) {
+    try {
+      await deleteTask(id);
+    } catch (error) {
+      console.error("Error deleting task", error);
+    }
+  }
 
-    setTasks([...tasks, newTask]);
-    setModalVisible(false);
+  async function addTask(taskData) {
+    if (!user) return;
+    try {
+      await createTask(taskData, user.uid);
+      closeModal();
+    } catch (error) {
+      console.error("Error adding a task", error);
+    }
   }
 
   function getFilteredTasks() {
@@ -133,9 +128,71 @@ export default function HomeScreen() {
     return tasks;
   }
 
+  const handleSignup = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.log(error);
+    }
+    setEmail("");
+    setPassword("");
+  };
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.log(error);
+    }
+    setEmail("");
+    setPassword("");
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.log(error);
+    }
+    setEmail("");
+    setPassword("");
+  };
+
   const filteredTasks = getFilteredTasks();
   const remainingTasks = tasks.filter((task) => !task.completed).length;
 
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.loginContainer}>
+        <View>
+          <Text style={styles.loginTitle}>My Tasks</Text>
+          <Text style={styles.loginSubtitle}>Sign in to continue</Text>
+          <TextInput
+            style={styles.loginInput}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+          <TextInput
+            style={styles.loginInput}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <Pressable style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Sign In</Text>
+          </Pressable>
+          <Pressable style={styles.createAccountButton} onPress={handleSignup}>
+            <Text style={styles.createAccountButtonText}>
+              Create an Account
+            </Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -146,13 +203,14 @@ export default function HomeScreen() {
               {remainingTasks} tasks remaining
             </Text>
           </View>
-
-          <Pressable
-            style={styles.addButton}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.addButtonText}>+</Text>
-          </Pressable>
+          <View>
+            <Pressable onPress={handleLogout}>
+              <Text>Logout</Text>
+            </Pressable>
+            <Pressable style={styles.addButton} onPress={openAddModal}>
+              <Text style={styles.addButtonText}>+</Text>
+            </Pressable>
+          </View>
         </View>
         <View style={styles.filters}>
           <FilterButton
@@ -378,5 +436,52 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#bbbbbb",
     marginLeft: 8,
+  },
+  loginContainer: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 24,
+  },
+  loginTitle: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  loginSubtitle: {
+    fontSize: 16,
+    color: "#668",
+    marginBottom: 24,
+  },
+  loginInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 14,
+    fontSize: 16,
+    marginBottom: 16,
+  },
+
+  loginButton: {
+    backgroundColor: "#222",
+    padding: 14,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  loginButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  createAccountButton: {
+    borderWidth: 1,
+    borderColor: "#222",
+    padding: 14,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  createAccountButtonText: {
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
