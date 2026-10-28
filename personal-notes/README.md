@@ -1,56 +1,126 @@
-# Welcome to your Expo app 👋
+# Personal Notes App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A lightweight mobile-first notes application built with Expo and Firebase. The app lets users create, view, edit, delete, and favorite personal notes while keeping everything in sync through Firestore.
 
-## Get started
+## Overview
 
-1. Install dependencies
+This project is designed as a simple daily note-taking app for personal organization. Users sign in with an email/password account and manage their own notes from a clean, modern interface. It is built to work across Android, iOS, and the web with Expo, using Firebase Authentication and Firestore for secure, cloud-based storage.
 
-   ```bash
-   npm install
-   ```
+## Key Features
 
-2. Start the app
+- Email/password authentication with Firebase Auth
+- Create, update, and delete notes
+- Favorite and unfavorite notes
+- Filter notes between all notes and favorites
+- Real-time syncing with Firestore
+- Mobile-first UI with light and dark theme support
+- Cross-platform app experience with Expo and React Native
 
-   ```bash
-   npx expo start
-   ```
+## Tech Stack
 
-In the output, you'll find options to open the app in a
+- Expo
+- React Native
+- TypeScript
+- Expo Router
+- Firebase Authentication
+- Firestore
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+personal-notes/
+├── src/
+│   ├── app/                  # App screens and routing
+│   ├── components/           # Reusable UI components
+│   ├── constants/            # Theme and shared styling values
+│   ├── firebase/             # Firebase initialization
+│   ├── hooks/                # Theme and color scheme hooks
+│   ├── services/             # Note CRUD and subscription logic
+│   └── global.css            # Global styling for web
+├── app.json                  # Expo app configuration
+├── package.json              # Dependencies and scripts
+├── tsconfig.json             # TypeScript config
+├── README.md                 # Project overview and setup
+├── LICENSE                   # License information
+├── assets/                   # App assets and icons
+├── scripts/                  # Utility scripts
+└── expo-env.d.ts             # Expo TypeScript environment file
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## How it works
 
-### Other setup steps
+1. A user signs in or creates an account with Firebase authentication.
+2. After authentication, the app subscribes to that user's notes in Firestore.
+3. Notes appear in a list where users can filter favorites.
+4. Users can create, edit, or delete notes, and changes are saved immediately.
+5. Firestore snapshots keep the interface in sync in real time.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Getting Started
 
-## Learn more
+### Prerequisites
 
-To learn more about developing your project with Expo, look at the following resources:
+- Node.js 18+
+- npm or bun
+- Expo CLI or the Expo mobile app
+- A Firebase project with Authentication and Firestore enabled
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Install dependencies
 
-## Join the community
+```bash
+npm install
+```
 
-Join our community of developers creating universal apps.
+### Start the app
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npx expo start
+```
+
+Then open the app in:
+
+- an Android emulator
+- an iOS simulator
+- Expo Go on a mobile device
+- the browser with Expo web support
+
+## Firebase Setup
+
+This project is already wired to Firebase, but it should be customized for your own project.
+
+1. Create a Firebase project in the Firebase Console.
+2. Enable:
+   - Email/Password authentication
+   - Firestore Database
+3. Update the Firebase config inside `src/firebase/firebaseConfig.ts` with your own project values.
+4. Make sure your Firestore rules allow authenticated users to manage only their own notes.
+
+## Available Scripts
+
+```bash
+npm start
+npm run android
+npm run ios
+npm run web
+npm run lint
+```
+
+## Development Notes
+
+- The app uses Expo Router for navigation.
+- Authentication state drives the experience: signed-out users see the login form, and signed-in users see their notes dashboard.
+- Notes are scoped by `userId`, ensuring users only see their own data.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Potential Improvements
+
+Possible enhancements include:
+
+- note search and sorting
+- tag and category organization
+- rich text editing
+- offline storage support
+- password reset and profile tools
+- cloud sync improvements
